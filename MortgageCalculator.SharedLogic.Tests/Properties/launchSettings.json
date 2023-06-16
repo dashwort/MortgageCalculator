@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "MortgageCalculator.SharedLogic.Tests": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}
