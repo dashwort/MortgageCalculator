@@ -61,4 +61,34 @@ public interface IMonthlyMortgage
     /// The amount of deposit/down-payment available for the mortgage
     /// </summary>
     double DepositAmount { get; set; }
+
+    /// <summary>
+    /// This series show the mortgage amount remaining per year of the mortgage
+    /// </summary>
+    Dictionary<double, double> OutstandingAmountPerYear { get; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    Dictionary<double, double> OutstandingAmountPerYearWhenOverpayingMonthly { get; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    double TotalCostOfMortgage { get; }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    double TotalCostOfMortgageWhenOverpaying { get; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    DateTime PayOffDateTime { get; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    DateTime PayOffDateTimeWhenOverpaying { get; }
 }

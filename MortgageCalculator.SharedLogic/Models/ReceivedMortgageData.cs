@@ -22,5 +22,10 @@ namespace MortgageCalculator.SharedLogic.Models
         [Required]
         [JsonProperty("term")]
         public double Term { get; set; }
+
+        [JsonProperty("overpayment")]
+        public double Overpayment { get; set; }
+
+
     }
 }

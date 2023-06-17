@@ -29,6 +29,7 @@ namespace MortgageCalculator.Controllers
             {
                 return new JsonResult(BadRequest(validationResult.Errors));
             }
+
             _monthlyMortgageCalculator.InterestRatePercent = data.InterestRate;
             _monthlyMortgageCalculator.MortgageAmount = data.MortgageAmount;
             _monthlyMortgageCalculator.Term = data.Term;
