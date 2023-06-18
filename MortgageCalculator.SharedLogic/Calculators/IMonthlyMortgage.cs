@@ -81,7 +81,12 @@ public interface IMonthlyMortgage
     /// 
     /// </summary>
     decimal TotalCostOfMortgage { get; }
-    
+
+    /// <summary>
+    /// 
+    /// </summary>
+    decimal TotalCostOfMortgageInterestOnly { get; }
+
     /// <summary>
     /// 
     /// </summary>

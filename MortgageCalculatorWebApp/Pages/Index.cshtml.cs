@@ -15,9 +15,9 @@ namespace MortgageCalculatorWebApp.Pages
         /// <summary>
         /// runs when a razor pages receives a get request
         /// </summary>
-        public void OnGet()
+        public IActionResult OnGet()
         {
-
+            return RedirectToPage("BasicCalculator");
         }
 
         /// <summary>

@@ -18,27 +18,27 @@ namespace MortgageCalculatorWebApp.Pages
             _logger = logger;
             Calculator = new MonthlyMortgage();
 
-            WelcomeText = "Click calculate to continue...";
+            SubmitButtonText = "Submit";
         }
 
-        public string WelcomeText { get; set; }
+        public string SubmitButtonText { get; set; }
 
 
         public void OnGet()
         {
-            if (Calculator.MortgageAmount != 0 || Calculator.InterestRate != 0 || Calculator.Term != 0)
-            {
-                WelcomeText = "Click calculate to continue...";
-            }
+
         }
 
         // the IActionResult is returned because when submitting a form, you typically carry out an action e.g. redirect user, refresh page etc.
         public IActionResult OnPost()
         {
             if (ModelState.IsValid)
+            {
+                SubmitButtonText = "Update";
                 return Page();
+            }
 
-            return RedirectToPage(nameof(IndexModel));
+            return RedirectToPage("index");
         }
 
 

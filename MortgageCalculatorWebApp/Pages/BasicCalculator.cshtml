@@ -1,39 +1,95 @@
 ﻿@page
+@using System.Globalization
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model BasicCalculatorModel
 @{
     ViewData["Title"] = "Mortgage Calculator";
 }
-<h3>@Model.WelcomeText</h3>
-<form method="post">
-    <div class="form-group">
-        <label class="sr-only" for="mortgageAmountInput">Mortgage Amount</label>
-        <div class="input-group mb-2">
-            <div class="input-group-prepend">
-                <div class="input-group-text">£</div>
-            </div>
-            <input type="number" class="form-control" id="mortgageAmountInput" min="1" asp-for="Calculator.MortgageAmount">
-        </div>
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Welcome to Dave's Mortgage Calculator</h5>
+        <p class="card-text">A mortgage is one of the biggest commitments you'll make in your financial life. But with so many possible deals out there, it can be hard to work out which would cost you the least. Our mortgage calculator helps, by showing what you'll pay each month, as well as the total cost over the lifetime of the mortgage, depending on the deal - you just need to input some basic info, such as interest rate and fee size.</p>
     </div>
-    <div class="form-row">
-        <div class="col">
-            <label class="sr-only" for="interestRateInput">Interest Rate</label>
+</div>
+<p></p>
+<div class="row">
+    <form method="post">
+        <div class="form-group">
+            <label class="sr-only" for="mortgageAmountInput">Mortgage Amount</label>
             <div class="input-group mb-2">
                 <div class="input-group-prepend">
-                    <div class="input-group-text">%</div>
+                    <div class="input-group-text">£</div>
                 </div>
-                <input type="number" class="form-control" id="interestRateInput" min="1" max="99.99" step="0.01" asp-for="Calculator.InterestRatePercent">
+                <input type="number" class="form-control" id="mortgageAmountInput" min="1" asp-for="Calculator.MortgageAmount">
             </div>
         </div>
-        <div class="col">
-            <label class="sr-only" for="interestRateInput">Term</label>
-            <div class="input-group mb-2">
-                <div class="input-group-postpend">
-                    <div class="input-group-text">Years</div>
+        <div class="row">
+            <div class="col">
+                <label class="sr-only" for="interestRateInput">Interest Rate</label>
+                <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">%</div>
+                    </div>
+                    <input type="number" class="form-control" id="interestRateInput" min="1" max="99.99" step="0.01" asp-for="Calculator.InterestRatePercent">
                 </div>
-                <input type="number" class="form-control" id="termInput" min="1" max="40" asp-for="Calculator.Term">
+            </div>
+            <div class="col">
+                <label class="sr-only" for="interestRateInput">Term</label>
+                <div class="input-group mb-2">
+                    <div class="input-group-postpend">
+                        <div class="input-group-text">Years</div>
+                    </div>
+                    <input type="number" class="form-control" id="termInput" min="1" max="40" asp-for="Calculator.Term">
+                </div>
+            </div>
+        </div>
+    
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary"><strong>@Model.SubmitButtonText</strong></button>
+        </div>
+    </form>
+</div>
+<br />
+<!-- Displays tabbed UI with the users mortgage calculation results-->
+@if (!(Model.Calculator.ParametersAreNotSet()))
+{
+    <div class="row">
+        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Repayment</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Interest only</button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="pills-tabContent">
+            <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
+                <row>
+                    <div class="card" style="*">
+                        <div class="card-body">
+                            <h6 class="card-subtitle mb-2 text-body-secondary">£@Model.Calculator.MonthlyRepayment per month</h6>
+                            <p class="card-text">Total mortgage cost: £@Model.Calculator.TotalCostOfMortgage</p>
+                            <p class="card-text">Final payment date: @Model.Calculator.PayOffDateTime.ToString(new CultureInfo("en-GB"))</p>
+                        </div>
+                    </div>
+                </row>
+
+            </div>
+            <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
+                <row>
+                    <div class="card" style="*">
+                        <div class="card-body">
+                            <h6 class="card-subtitle mb-2 text-body-secondary">£@Model.Calculator.InterestOnlyMonthlyRepayment per month</h6>
+                            <p class="card-text">Total mortgage cost: £@Model.Calculator.TotalCostOfMortgageInterestOnly</p>
+                            <p class="card-text">Final payment date: @Model.Calculator.PayOffDateTime.ToString(new CultureInfo("en-GB"))</p>
+                        </div>
+                    </div>
+                </row>
             </div>
         </div>
     </div>
+}
 
-    <button type="submit" class="btn btn-primary">Calculate</button>
-</form>
+
+

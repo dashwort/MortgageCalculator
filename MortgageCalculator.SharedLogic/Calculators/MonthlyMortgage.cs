@@ -53,7 +53,7 @@
             get
             {
                 if (ParametersAreNotSet())
-                    return 1;
+                    return 0;
 
                 var ratio = ((double)InterestRate * Math.Pow(1 + (double)InterestRate, TermMonths)) /
                                 (Math.Pow((1 + (double)InterestRate), TermMonths) - 1);
@@ -136,6 +136,9 @@
 
         /// <inheritdoc />
         public decimal TotalCostOfMortgage => MonthlyRepayment * TermMonths;
+
+        /// <inheritdoc />
+        public decimal TotalCostOfMortgageInterestOnly => InterestOnlyMonthlyRepayment * TermMonths;
 
         /// <inheritdoc />
         public decimal TotalCostOfMortgageWhenOverpaying =>
