@@ -9,23 +9,27 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MortgageCalculator.SharedLogic.Models
 {
-    public class ReceivedMortgageData
+    public class ReceivedMortgageDataModel
     {
         [Required]
         [JsonProperty("mortgageAmount")]
-        public double MortgageAmount { get; set; }
+        public decimal MortgageAmount { get; set; }
 
         [Required]
         [JsonProperty("interestRate")]
-        public double InterestRate { get; set; }
+        public decimal InterestRate { get; set; }
 
         [Required]
         [JsonProperty("term")]
-        public double Term { get; set; }
+        public int Term { get; set; }
 
         [JsonProperty("overpayment")]
-        public double Overpayment { get; set; }
+        public decimal Overpayment { get; set; }
 
+        [JsonProperty("housePrice")]
+        public decimal HousePrice { get; set; }
 
+        [JsonProperty("depositAmount")]
+        public decimal DepositAmount { get; set; }
     }
 }

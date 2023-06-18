@@ -1,0 +1,39 @@
+﻿@page
+@model BasicCalculatorModel
+@{
+    ViewData["Title"] = "Mortgage Calculator";
+}
+<h3>@Model.WelcomeText</h3>
+<form method="post">
+    <div class="form-group">
+        <label class="sr-only" for="mortgageAmountInput">Mortgage Amount</label>
+        <div class="input-group mb-2">
+            <div class="input-group-prepend">
+                <div class="input-group-text">£</div>
+            </div>
+            <input type="number" class="form-control" id="mortgageAmountInput" min="1" asp-for="Calculator.MortgageAmount">
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col">
+            <label class="sr-only" for="interestRateInput">Interest Rate</label>
+            <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">%</div>
+                </div>
+                <input type="number" class="form-control" id="interestRateInput" min="1" max="99.99" step="0.01" asp-for="Calculator.InterestRatePercent">
+            </div>
+        </div>
+        <div class="col">
+            <label class="sr-only" for="interestRateInput">Term</label>
+            <div class="input-group mb-2">
+                <div class="input-group-postpend">
+                    <div class="input-group-text">Years</div>
+                </div>
+                <input type="number" class="form-control" id="termInput" min="1" max="40" asp-for="Calculator.Term">
+            </div>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Calculate</button>
+</form>

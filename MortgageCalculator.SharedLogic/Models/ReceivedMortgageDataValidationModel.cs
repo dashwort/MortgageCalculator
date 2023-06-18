@@ -2,7 +2,7 @@
 
 namespace MortgageCalculator.SharedLogic.Models
 {
-    public class ReceivedMortgageDataValidationModel : AbstractValidator<ReceivedMortgageData>
+    public class ReceivedMortgageDataValidationModel : AbstractValidator<ReceivedMortgageDataModel>
     {
         public ReceivedMortgageDataValidationModel()
         {

@@ -5,27 +5,27 @@ public interface IMonthlyMortgage
     /// <summary>
     /// Mortgage term when expressed in years
     /// </summary>
-    double Term { get; set; }
+    int Term { get; set; }
 
     /// <summary>
     /// Mortgage term when expressed in months
     /// </summary>
-    double TermMonths { get; }
+    int TermMonths { get; }
 
     /// <summary>
     /// The mortgage interest rate expressed as a percentage
     /// </summary>
-    double InterestRatePercent { get; set; }
+    decimal InterestRatePercent { get; set; }
 
     /// <summary>
-    /// The mortgage interest rate expressed as a double and divided by 12
+    /// The mortgage interest rate expressed as a decimal and divided by 12
     /// </summary>
-    double InterestRate { get; }
+    decimal InterestRate { get; }
 
     /// <summary>
     /// The mortgage amount outstanding
     /// </summary>
-    double MortgageAmount { get; set; }
+    decimal MortgageAmount { get; set; }
 
     /// <summary>
     /// calculates the monthly repayment for a repayment style mortgage
@@ -34,11 +34,11 @@ public interface IMonthlyMortgage
     /// Where:
     /// M = Monthly mortgage payment
     /// P = Principal loan amount(the amount you borrow)
-    /// i = Monthly interest rate(annual interest rate divided by 12 and expressed as a double)
+    /// i = Monthly interest rate(annual interest rate divided by 12 and expressed as a decimal)
     /// n = Number of monthly payments(loan term in months)
     /// </summary>
-    /// <returns>the monthly repayment as a double</returns>
-    double MonthlyRepayment { get; }
+    /// <returns>the monthly repayment as a decimal</returns>
+    decimal MonthlyRepayment { get; }
 
     /// <summary>
     /// calculates the monthly repayment for a repayment style mortgage
@@ -47,40 +47,45 @@ public interface IMonthlyMortgage
     /// Where:
     /// M = Monthly mortgage payment
     /// P = Principal loan amount(the amount you borrow)
-    /// i = Monthly interest rate(annual interest rate divided by 12 and expressed as a double)
+    /// i = Monthly interest rate(annual interest rate divided by 12 and expressed as a decimal)
     /// </summary>
-    /// <returns>the monthly repayment as a double</returns>
-    double InterestOnlyMonthlyRepayment { get; }
+    /// <returns>the monthly repayment as a decimal</returns>
+    decimal InterestOnlyMonthlyRepayment { get; }
 
     /// <summary>
     /// The purchase price of the house in the selected currency
     /// </summary>
-    double HousePrice { get; set; }
+    decimal HousePrice { get; set; }
 
     /// <summary>
     /// The amount of deposit/down-payment available for the mortgage
     /// </summary>
-    double DepositAmount { get; set; }
+    decimal DepositAmount { get; set; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    decimal MonthlyOverPayment { get; set; }
 
     /// <summary>
     /// This series show the mortgage amount remaining per year of the mortgage
     /// </summary>
-    Dictionary<double, double> OutstandingAmountPerYear { get; }
+    Dictionary<int, decimal> OutstandingAmountPerYear { get; }
 
     /// <summary>
     /// 
     /// </summary>
-    Dictionary<double, double> OutstandingAmountPerYearWhenOverpayingMonthly { get; }
+    Dictionary<int, decimal> OutstandingAmountPerYearWhenOverpayingMonthly { get; }
 
     /// <summary>
     /// 
     /// </summary>
-    double TotalCostOfMortgage { get; }
+    decimal TotalCostOfMortgage { get; }
     
     /// <summary>
     /// 
     /// </summary>
-    double TotalCostOfMortgageWhenOverpaying { get; }
+    decimal TotalCostOfMortgageWhenOverpaying { get; }
 
     /// <summary>
     /// 

@@ -2,24 +2,24 @@
 {
     public class MonthlyMortgage : IMonthlyMortgage
     {
-		double _term;
-        double _interestRatePercent;
-        double _mortgageAmount;
-        double _housePrice;
-        double _depositAmount;
+		int _term;
+        decimal _interestRatePercent;
+        decimal _mortgageAmount;
+        decimal _housePrice;
+        decimal _depositAmount;
 
         /// <inheritdoc />
-        public double Term
+        public int Term
         {
 			get => _term;
             set => _term = value;
         }
 
         /// <inheritdoc />
-        public double TermMonths => _term * 12;
+        public int TermMonths => _term * 12;
 
         /// <inheritdoc />
-		public double InterestRatePercent
+		public decimal InterestRatePercent
         {
 			get => _interestRatePercent;
             set
@@ -32,10 +32,10 @@
 		}
 
         /// <inheritdoc />
-        public double InterestRate => _interestRatePercent / 1200;
+        public decimal InterestRate => _interestRatePercent / 1200;
 
         /// <inheritdoc />
-        public double MortgageAmount
+        public decimal MortgageAmount
         {
             get => _mortgageAmount;
             set
@@ -48,60 +48,64 @@
         }
 
         /// <inheritdoc />
-        public double MonthlyRepayment
+        public decimal MonthlyRepayment
         {
             get
             {
-                var ratio = (InterestRate * Math.Pow((1 + InterestRate), TermMonths)) /
-                            (Math.Pow((1 + InterestRate), TermMonths) - 1);
+                if (ParametersAreNotSet())
+                    return 1;
 
-                return MortgageAmount * ratio;
+                var ratio = ((double)InterestRate * Math.Pow(1 + (double)InterestRate, TermMonths)) /
+                                (Math.Pow((1 + (double)InterestRate), TermMonths) - 1);
+
+                return Math.Round(MortgageAmount * (decimal)ratio);
             }
         }
 
         /// <inheritdoc />
-        public double InterestOnlyMonthlyRepayment => MortgageAmount * InterestRate;
+        public decimal InterestOnlyMonthlyRepayment => MortgageAmount * InterestRate;
 
         /// <inheritdoc />
-        public double HousePrice
+        public decimal HousePrice
         {
             get => _housePrice;
             set
             {
-                if (value < 0)
+                if (value <= 0)
                     return;
 
-                if (DepositAmount >= 0)
-                {
-                    MortgageAmount = HousePrice - DepositAmount;
-                }
-
                 _housePrice = value;
+
+                if (DepositAmount > 0 && HousePrice > 0)
+                    MortgageAmount = HousePrice - DepositAmount;
             }
         }
 
         /// <inheritdoc />
-        public double DepositAmount
+        public decimal DepositAmount
         {
             get => _depositAmount;
             set
             {
-                if (value < 0)
+                if (value <= 0)
                     return;
 
-                if (HousePrice > 0)
-                    MortgageAmount = HousePrice - DepositAmount;
-
                 _depositAmount = value;
+
+                if (HousePrice > 0 && DepositAmount > 0) 
+                    MortgageAmount = HousePrice - DepositAmount;
             }
         }
 
         /// <inheritdoc />
-        public Dictionary<double, double> OutstandingAmountPerYear
+        public Dictionary<int, decimal> OutstandingAmountPerYear
         {
             get
             {
-                var amountOutstanding = new Dictionary<double, double>();
+                var amountOutstanding = new Dictionary<int, decimal>();
+
+                if (ParametersAreNotSet())
+                    return amountOutstanding;
 
                 for (int i = 0; i <= Term; i++)
                     amountOutstanding.Add(i, CalculateRemainingAmount(i));
@@ -111,11 +115,14 @@
         }
 
         /// <inheritdoc />
-        public Dictionary<double, double> OutstandingAmountPerYearWhenOverpayingMonthly
+        public Dictionary<int, decimal> OutstandingAmountPerYearWhenOverpayingMonthly
         {
             get
             {
-                var amountOutstanding = new Dictionary<double, double>();
+                var amountOutstanding = new Dictionary<int, decimal>();
+
+                if (ParametersAreNotSet())
+                    return amountOutstanding;
 
                 for (int i = 0; i <= Term; i++)
                     amountOutstanding.Add(i, CalculateRemainingAmount(i, MonthlyOverPayment));
@@ -125,14 +132,14 @@
         }
 
         /// <inheritdoc />
-        public double MonthlyOverPayment { get; set; }
+        public decimal MonthlyOverPayment { get; set; }
 
         /// <inheritdoc />
-        public double TotalCostOfMortgage => MonthlyRepayment * TermMonths;
+        public decimal TotalCostOfMortgage => MonthlyRepayment * TermMonths;
 
         /// <inheritdoc />
-        public double TotalCostOfMortgageWhenOverpaying =>
-            CalculatePayoffDate() * (MonthlyRepayment + MonthlyOverPayment);
+        public decimal TotalCostOfMortgageWhenOverpaying =>
+            CalculatePayoffDate(MonthlyOverPayment) * (MonthlyRepayment + MonthlyOverPayment);
 
         /// <inheritdoc />
         public DateTime PayOffDateTime => DateTime.Now.AddMonths(CalculatePayoffDate());
@@ -143,7 +150,7 @@
         /// Helper method that calculates the remaining number of months as an integer. Overpayment can be passed to give different dates.
         /// </summary>
         /// <returns>integer representing the months remaining until the mortgage amount reaches 0</returns>
-        int CalculatePayoffDate(double overpayment = 0)
+        int CalculatePayoffDate(decimal overpayment = 0)
         {
             var remainingAmount = MortgageAmount;
             var totalMonths = 0;
@@ -165,10 +172,10 @@
         /// <summary>
         /// Calculates the remaining mortgage amount for a given year
         /// </summary>
-        /// <param name="currentYear">the year as a double</param>
-        /// <param name="overpayment">optional overpayment as a double</param>
+        /// <param name="currentYear">the year as a decimal</param>
+        /// <param name="overpayment">optional overpayment as a decimal</param>
         /// <returns></returns>
-        double CalculateRemainingAmount(double currentYear, double overpayment = 0)
+        decimal CalculateRemainingAmount(decimal currentYear, decimal overpayment = 0)
         {
             var monthlyPayment = MonthlyRepayment + overpayment;
             var remainingAmount = MortgageAmount;
@@ -180,7 +187,12 @@
                 remainingAmount -= principalPayment;
             }
 
-            return remainingAmount;
+            return remainingAmount < 0 ? 0 : remainingAmount;
+        }
+
+        public bool ParametersAreNotSet()
+        {
+            return InterestRatePercent <= 0 || Term <= 0 || MortgageAmount <= 0;
         }
     }
 }

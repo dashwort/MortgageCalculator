@@ -1,11 +1,9 @@
 ﻿using FluentValidation;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MortgageCalculator.SharedLogic.Calculators;
 using MortgageCalculator.SharedLogic.Models;
-using System.Reflection;
 
-namespace MortgageCalculator.Controllers
+namespace MortgageCalculatorWebApp.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
