@@ -1,5 +1,3 @@
-name: Docker Publish
-
 on:
   push:
     branches:
@@ -21,3 +19,9 @@ jobs:
 
     - name: Push Docker image to Docker Hub
       run: docker push daveuenza/mortgage-calculator:${{ github.sha }}
+
+    - name: Add 'latest' tag to Docker image
+      run: docker tag daveuenza/mortgage-calculator:${{ github.sha }} daveuenza/mortgage-calculator:latest
+
+    - name: Push Docker image with 'latest' tag
+      run: docker push daveuenza/mortgage-calculator:latest
