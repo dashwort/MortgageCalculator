@@ -1,4 +1,7 @@
-﻿namespace MortgageCalculator.SharedLogic.Calculators;
+﻿using MortgageCalculator.SharedLogic.Models;
+using MortgageCalculator.SharedLogic.Models.Chart;
+
+namespace MortgageCalculator.SharedLogic.Calculators;
 
 public interface IMonthlyMortgage
 {
@@ -68,37 +71,43 @@ public interface IMonthlyMortgage
     decimal MonthlyOverPayment { get; set; }
 
     /// <summary>
-    /// This series show the mortgage amount remaining per year of the mortgage
+    /// 
     /// </summary>
-    Dictionary<int, decimal> OutstandingAmountPerYear { get; }
+    IMortgageData Repayment { get; }
 
     /// <summary>
     /// 
     /// </summary>
-    Dictionary<int, decimal> OutstandingAmountPerYearWhenOverpayingMonthly { get; }
+    IMortgageData Overpayment { get; }
 
     /// <summary>
     /// 
     /// </summary>
-    decimal TotalCostOfMortgage { get; }
+    IMortgageData InterestOnly { get; }
 
     /// <summary>
     /// 
     /// </summary>
-    decimal TotalCostOfMortgageInterestOnly { get; }
+    string[] XAxisLabels { get; }
+
+    /// <summary>
+    /// Calculates the remaining mortgage amount for a given year
+    /// </summary>
+    /// <param name="currentYear">the year as a decimal</param>
+    /// <param name="overpayment">optional overpayment as a decimal</param>
+    /// <returns></returns>
+    public decimal CalculateRemainingAmount(decimal currentYear, decimal overpayment = 0);
 
     /// <summary>
     /// 
     /// </summary>
-    decimal TotalCostOfMortgageWhenOverpaying { get; }
+    /// <returns></returns>
+    public bool ParametersAreNotSet();
 
     /// <summary>
-    /// 
+    /// Helper method that calculates the remaining number of months as an integer. Overpayment can be passed to give different dates.
     /// </summary>
-    DateTime PayOffDateTime { get; }
+    /// <returns>integer representing the months remaining until the mortgage amount reaches 0</returns>
+    public int CalculatePayoffDate(decimal overpayment = 0);
 
-    /// <summary>
-    /// 
-    /// </summary>
-    DateTime PayOffDateTimeWhenOverpaying { get; }
 }

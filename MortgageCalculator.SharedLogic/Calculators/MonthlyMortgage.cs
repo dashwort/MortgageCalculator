@@ -1,4 +1,7 @@
-﻿namespace MortgageCalculator.SharedLogic.Calculators
+﻿using MortgageCalculator.SharedLogic.Models;
+using MortgageCalculator.SharedLogic.Models.Chart;
+
+namespace MortgageCalculator.SharedLogic.Calculators
 {
     public class MonthlyMortgage : IMonthlyMortgage
     {
@@ -98,36 +101,16 @@
         }
 
         /// <inheritdoc />
-        public Dictionary<int, decimal> OutstandingAmountPerYear
+        public string[] XAxisLabels
         {
             get
             {
-                var amountOutstanding = new Dictionary<int, decimal>();
-
-                if (ParametersAreNotSet())
-                    return amountOutstanding;
+                var xAxisLabels = new List<string>();
 
                 for (int i = 0; i <= Term; i++)
-                    amountOutstanding.Add(i, CalculateRemainingAmount(i));
+                    xAxisLabels.Add(i.ToString());
 
-                return amountOutstanding;
-            }
-        }
-
-        /// <inheritdoc />
-        public Dictionary<int, decimal> OutstandingAmountPerYearWhenOverpayingMonthly
-        {
-            get
-            {
-                var amountOutstanding = new Dictionary<int, decimal>();
-
-                if (ParametersAreNotSet())
-                    return amountOutstanding;
-
-                for (int i = 0; i <= Term; i++)
-                    amountOutstanding.Add(i, CalculateRemainingAmount(i, MonthlyOverPayment));
-
-                return amountOutstanding;
+                return xAxisLabels.ToArray();
             }
         }
 
@@ -135,25 +118,34 @@
         public decimal MonthlyOverPayment { get; set; }
 
         /// <inheritdoc />
-        public decimal TotalCostOfMortgage => MonthlyRepayment * TermMonths;
+        public IMortgageData Repayment
+        {
+            get
+            {
+                return new MortgageData(this, Models.enums.MortgageType.Repayment);
+            }
+        }
 
         /// <inheritdoc />
-        public decimal TotalCostOfMortgageInterestOnly => InterestOnlyMonthlyRepayment * TermMonths;
+        public IMortgageData Overpayment
+        {
+            get
+            {
+                return new MortgageData(this, Models.enums.MortgageType.Overpayment);
+            }
+        }
 
         /// <inheritdoc />
-        public decimal TotalCostOfMortgageWhenOverpaying =>
-            CalculatePayoffDate(MonthlyOverPayment) * (MonthlyRepayment + MonthlyOverPayment);
+        public IMortgageData InterestOnly
+        {
+            get
+            {
+                return new MortgageData(this, Models.enums.MortgageType.InterestOnly);
+            }
+        }
 
         /// <inheritdoc />
-        public DateTime PayOffDateTime => DateTime.Now.AddMonths(CalculatePayoffDate());
-
-        public DateTime PayOffDateTimeWhenOverpaying => DateTime.Now.AddMonths(CalculatePayoffDate(MonthlyOverPayment));
-
-        /// <summary>
-        /// Helper method that calculates the remaining number of months as an integer. Overpayment can be passed to give different dates.
-        /// </summary>
-        /// <returns>integer representing the months remaining until the mortgage amount reaches 0</returns>
-        int CalculatePayoffDate(decimal overpayment = 0)
+        public int CalculatePayoffDate(decimal overpayment = 0)
         {
             var remainingAmount = MortgageAmount;
             var totalMonths = 0;
@@ -172,13 +164,8 @@
             return totalMonths;
         }
 
-        /// <summary>
-        /// Calculates the remaining mortgage amount for a given year
-        /// </summary>
-        /// <param name="currentYear">the year as a decimal</param>
-        /// <param name="overpayment">optional overpayment as a decimal</param>
-        /// <returns></returns>
-        decimal CalculateRemainingAmount(decimal currentYear, decimal overpayment = 0)
+        /// <inheritdoc />
+        public decimal CalculateRemainingAmount(decimal currentYear, decimal overpayment = 0)
         {
             var monthlyPayment = MonthlyRepayment + overpayment;
             var remainingAmount = MortgageAmount;
